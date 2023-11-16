@@ -1,0 +1,309 @@
+// Online C compiler to run C program online
+#include <stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<stdbool.h>
+void id();
+void title();
+void totalbook();
+void create();
+void addbook();
+void bookinfo();
+void authorname();
+void rent();
+void restock();
+struct node
+{
+    struct node *next;
+    struct node *prev;
+    char name[20];
+    char author[20];
+    int idno;
+    int price;
+    char flag[5];
+    char rent_to[10];
+    
+    
+}*head,*stNode,*top;
+int total=0;
+char name1[10]="NONE";
+int main() {
+   int x,n;
+   printf("Enter the no of books:");
+   scanf("%d",&n);
+   create(n);
+   while(true)
+       {
+           printf("\n===================================================\n");
+       	   printf("\t\t  LIBRARY MANAGMENT SYSTEM");
+           printf("\n===================================================\n");
+           printf("1.Adding Book Information:\n");
+           printf("2.Display Book Information:\n");
+           printf("3.List All Books Of Given Author:\n");
+           printf("4.List The Count Of Books In The Library:\n");
+           printf("5.List The Title Of Specified Book:\n");
+           printf("6.List The Books For Books id's:\n");
+           printf("7.Renting The Book:\n");
+           printf("8.Restocking The Book:\n");
+           printf("9.Exit:\n");
+           printf("Your choice: ");
+           scanf("%d",&x);
+           switch(x)
+           {
+               case 1:
+                   addbook();
+                   break;
+               case 2:
+                   bookinfo();
+                   break;
+               case 3:
+                   authorname();
+                   break;
+               case 4:
+                   totalbook();
+                   break;
+               case 5:
+                   title();
+                   break;
+               case 6:
+                   id();
+                   break;
+               case 7:
+                   rent();
+                   break;
+               case 8:
+               	   restock();
+               	   break;
+               case 9:
+               	   exit(0);
+               	   break;
+               default:
+                  printf("invalid entry");
+                  break;
+           }
+       }
+       return 0;
+    
+}
+void create(int n)
+{
+    struct node *newbook,*temp;
+    stNode = (struct node*)malloc(sizeof(struct node));
+    for (int i = 1; i <= n; i++) {
+     if(i==1){
+      if (stNode == NULL) {
+         printf(" Memory can not be allocated.");
+           }
+      else {
+        printf("\nEnter Name: ");
+        scanf("%s", stNode->name);
+        printf("\nEnter Author: ");
+        scanf("%s", stNode->author);
+        printf("\nEnter Book ID: ");
+        scanf("%d", &stNode->idno);
+        printf("\nEnter the Price: ");
+        scanf("%d", &stNode->price);
+        printf("\nBook Issued(yes or no):");
+        scanf("%s", stNode->flag);
+        printf("\nBook issued to: ");
+        scanf("%s", stNode->rent_to);
+        stNode->next = NULL;
+        stNode->prev=NULL;
+        temp = stNode;
+        head = stNode;
+        top = head;
+        total++;
+         }
+       }
+      else{
+            newbook = (struct node*)malloc(sizeof(struct node));
+            if (newbook == NULL) {
+
+                printf(" Memory can not be allocated.");
+                break;
+            }
+            else {
+                printf("\nEnter Name: ");
+                scanf("%s", newbook->name);
+                printf("\nEnter Author: ");
+                scanf("%s", newbook->author); 
+                printf("\nEnter Book ID: ");
+                scanf("%d", &newbook->idno);
+                printf("\nEnter the Price: ");
+                scanf("%d", &newbook->price);
+                printf("\nBook Issued(yes or no):");
+                scanf("%s", newbook->flag);
+                printf("\nBook issued to: ");
+                scanf("%s", newbook->rent_to);
+                newbook->next = NULL;
+                newbook->prev=temp;
+                temp->next = newbook;
+                temp =newbook ;
+                top=temp;
+                total++;
+            }
+        }
+    }
+}
+void bookinfo()
+{
+    struct node *temp;
+    printf("Displaying Book Information\n");
+    temp=head;
+    while(temp!=NULL)
+    {
+        printf("\n---------------------------------------------------");
+        printf("\nID Number of Books is:%d",temp->idno);
+        printf("\nTitle of Book is:%s",temp->name);
+        printf("\nName of Author is:%s",temp->author);
+        printf("\nPrice of Book is:%d",temp->price);
+        printf("\nBook Issued (Yes or No):%s",temp->flag);
+        printf("\nRent to:%s",temp->rent_to);
+        printf("\n---------------------------------------------------");
+        temp=temp->next;
+    }
+}
+void authorname()
+{
+    struct node *temp;
+    char a[20],b[20];
+    printf("\nEnter authors name: ");
+    scanf("%s",a);
+    temp=head;
+    while(temp!=NULL)
+    {
+        strcpy(temp->author,b);
+        if(strcmp(a,b))
+        {
+           printf("---------------------------------------------------");
+           printf("\nTitle of Book is:%s",temp->name);
+           printf("\nTitle of Book is %s",temp->author);
+           printf("\nID Number of Books is: %d",temp->idno);
+           printf("\nRent By: %s",temp->rent_to);
+           printf("\n---------------------------------------------------");
+        }
+        temp=temp->next;
+    } 
+}
+void totalbook()
+{
+	printf("---------------------------------------------------\n");
+    printf("Total Number of books in Library is %d",total);
+}
+void addbook()
+{
+     struct node *newbook;
+     newbook=(struct node*)malloc(sizeof(struct node));
+     printf("\nEnter Name: ");
+     scanf("%s", newbook->name);
+     printf("\nEnter Author: ");
+     scanf("%s", newbook->author); 
+     printf("\nEnter Book ID: ");
+     scanf("%d", &newbook->idno);
+     printf("\nEnter the Price: ");
+     scanf("%d", &newbook->price);
+     printf("\nBook Issued(yes or no):");
+     scanf("%s", newbook->flag);
+     printf("\nBook issued to: ");
+     scanf("%s", newbook->rent_to);
+     newbook->next = NULL;
+     newbook->prev=top;
+     top->next=newbook;
+     top=newbook;
+     total++;
+}
+void restock()
+{
+	printf("---------------------------------------------------\n");
+    printf("Restocking The Book\n");
+    addbook();
+}
+void rent()
+{
+    struct node *temp;
+    int found=0,a;
+    char name[10],flag[10];
+    printf("\nEnter ID of the Book: ");
+    scanf("%d",&a);
+    printf("---------------------------------------------------\n");
+    temp=head;
+    while(temp!=NULL)
+    {
+	    strcpy(temp->flag,flag);
+        if((temp->idno==a) && strcmp(flag,"NO"))
+        { 
+             printf("Enter name: ");
+             scanf("%s",name);
+             strcpy(name,temp->rent_to);
+    	     printf("BOOK ISSUED");
+    	     strcpy("YES",temp->flag);
+    	     found=1;
+    	     break;
+     	}
+     	temp=temp->next;
+    }
+    if(found==0){
+    	printf("Out of Stock");
+	}
+
+}
+void id()
+{
+    struct node *temp;
+    int a,found=0;
+    printf("\nEnter the ID: ");
+    scanf("%d",&a);
+    temp=head;
+    while(temp!=NULL)
+    {
+        if(a==temp->idno)
+        {
+            printf("---------------------------------------------------");
+            printf("\nID Number of Books is:%d",temp->idno);
+            printf("\nTitle of Book is:%s",temp->name);
+            printf("\nName of Author is:%s",temp->author);
+            printf("\nPrice of Book is:%d",temp->price);
+            printf("\nBook Issued (Yes or No):%s",temp->flag);
+            printf("\nRent to:%s",temp->rent_to);
+            printf("\n---------------------------------------------------");
+            temp=temp->next;
+            found=1;
+            break;
+        }
+    }
+    if (found == 0){
+    	printf("Out of Stock!!");
+	}
+}
+void title()
+{
+    struct node *temp;
+    char a[20],b[20];
+    int count=0, found = 0;
+    printf("\nEnter Title of the Book: ");
+    scanf("%s",a);
+    temp=head;
+    printf("---------------------------------------------------");
+    while(temp!=NULL)
+    {
+        strcpy(temp->author,b);
+        if(strcmp(a,b))
+        {
+            printf("---------------------------------------------------");
+            printf("\nID Number of Books is:%d",temp->idno);
+            printf("\nTitle of Book is:%s",temp->name);
+            printf("\nName of Author is:%s",temp->author);
+            printf("\nPrice of Book is:%d",temp->price);
+            printf("\nBook Issued (Yes or No):%s",temp->flag);
+            printf("\nRent to:%s",temp->rent_to);
+            printf("\n---------------------------------------------------");
+            found = 1;
+        }
+        temp=temp->next;
+    }
+    if (found == 0){
+    	printf("Out of Stock!!");
+	}
+    
+}
+
